@@ -1,0 +1,80 @@
+#include <stdio.h>
+
+int main() {
+    int pid[15], bt[15], n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    // Input process IDs
+    printf("Enter process ID of all the processes: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &pid[i]);
+    }
+
+    // Input burst times
+    printf("Enter burst time of all the processes: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &bt[i]);
+    }
+
+    int wt[n], tat[n]; // Waiting time and Turnaround time arrays
+
+    // Waiting time for the first process is 0
+    wt[0] = 0;
+
+    // Calculate waiting time for each process
+    for (int i = 1; i < n; i++) {
+        wt[i] = bt[i - 1] + wt[i - 1];
+    }
+
+    // Print header
+    printf("Process ID\tBurst Time\tWaiting Time\tTurnaround Time\n");
+
+    float total_wt = 0.0, total_tat = 0.0;
+
+    // Calculate turnaround time and print details for each process
+    for (int i = 0; i < n; i++) {
+        tat[i] = bt[i] + wt[i]; // Turnaround time = Burst Time + Waiting Time
+
+        // Print process details
+        printf("%d\t\t%d\t\t%d\t\t%d\n", pid[i], bt[i], wt[i], tat[i]);
+
+        // Accumulate total waiting and turnaround times
+        total_wt += wt[i];
+        total_tat += tat[i];
+    }
+
+    // Calculate average waiting time and average turnaround time
+    float avg_wt = total_wt / n;
+    float avg_tat = total_tat / n;
+
+    // Print average times
+    printf("\nAverage Waiting Time = %.2f\n", avg_wt);
+    printf("Average Turnaround Time = %.2f\n", avg_tat);
+
+    return 0;
+}
+
+
+Output:
+
+Enter the number of processes: 5
+Enter process ID of all the processes: 7
+9
+0
+6
+7
+Enter burst time of all the processes: 4
+6
+3
+2
+1
+Process ID      Burst Time      Waiting Time    Turnaround Time
+7               4               0               4
+9               6               4               10
+0               3               10              13
+6               2               13              15
+7               1               15              16
+
+Average Waiting Time = 8.40
+Average Turnaround Time = 11.60
